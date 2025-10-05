@@ -1,0 +1,9 @@
+catalog: main
+schema: turbine
+raw_data_path: data/sample
+bronze_table: bronze_readings
+silver_table: silver_readings
+gold_stats_table: gold_turbine_stats
+gold_anomalies_table: gold_turbine_anomalies
+expected_turbines_per_group: 5
+anomaly_z_threshold: 2.0
