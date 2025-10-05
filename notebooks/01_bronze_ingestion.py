@@ -1,6 +1,13 @@
 # Databricks notebook source
 # MAGIC %md
 # MAGIC ### Bronze ingestion
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.getOrCreate()
+
+# Create catalog and schema
+spark.sql("CREATE CATALOG IF NOT EXISTS main")
+spark.sql("CREATE SCHEMA IF NOT EXISTS main.turbine")
 
 # COMMAND ----------
 dbutils.widgets.text("catalog", "main")
