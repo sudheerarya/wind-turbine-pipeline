@@ -8,7 +8,7 @@ def bronze_schema():
         StructField("turbine_id", StringType(), True),
         StructField("wind_speed", DoubleType(), True),
         StructField("wind_direction", DoubleType(), True),
-        StructField("power_mw", DoubleType(), True),
+        StructField("power_output", DoubleType(), True),
         StructField("source_file", StringType(), True),
         StructField("ingest_ts", TimestampType(), True),
     ])
