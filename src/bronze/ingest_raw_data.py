@@ -2,11 +2,7 @@ from pyspark.sql import SparkSession, functions as F
 from pyspark.sql.functions import col
 from ..utils.data_quality import with_required_checks, drop_bad_rows
 
-def ingest_csvs(spark: SparkSession, input_path: str):
-    """
-    Ingest raw CSV data from a plain file path (no Unity Catalog).
-    Works with /dbfs/FileStore/ or direct cloud paths.
-    """
+def ingest_csvs(spark: SparkSession, input_path: str):    
     df = (
         spark.read
         .format("csv")
@@ -25,12 +21,20 @@ def ingest_csvs(spark: SparkSession, input_path: str):
     df_ok = drop_bad_rows(df)
     return df_ok
 
-def write_bronze(df, catalog: str, schema: str, table: str):
+def write_bronze(spark: SparkSession, df, catalog: str, schema: str, table: str):
+    """
+    Overwrites the bronze Delta table on each run — ensuring a full reload.
+    """
     full_name = f"{catalog}.{schema}.{table}"
-    (df.write
-        .format("delta")
-        .mode("append")
-        .option("mergeSchema", "true")
+    
+    # Ensure the table is fully replaced
+    spark.sql(f"DROP TABLE IF EXISTS {full_name}")
+    
+    df.write.format("delta") \
+        .mode("overwrite") \
+        .option("overwriteSchema", "true") \
+        .option("overwriteMode", "dynamic") \
         .saveAsTable(full_name)
-    )
+      
+    print(f"✅ Bronze table {full_name} fully refreshed.")
     return full_name
