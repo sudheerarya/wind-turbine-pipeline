@@ -139,4 +139,5 @@ wind-turbine-pipeline/
         ├── data_group_2.csv
         └── data_group_3.csv
 ```
-<img width="1582" height="448" alt="image" src="https://github.com/user-attachments/assets/3e2c3187-4fc6-44a3-bd99-343c30a48924" />
+<img width="1611" height="573" alt="image" src="https://github.com/user-attachments/assets/c164db59-cb7c-4493-b671-7613ce45c9f6" />
+
