@@ -17,6 +17,7 @@ spark.sql(f"USE CATALOG {catalog}")
 spark.sql(f"USE {schema}")
 
 # COMMAND ----------
+import importlib
 from src.silver.clean_and_validate import clean, write_silver
 
 bronze = spark.table(f"{catalog}.{schema}.{bronze_table}")
