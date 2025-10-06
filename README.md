@@ -118,10 +118,6 @@ wind-turbine-pipeline/
 │   ├── silver/
 │   │   ├── __init__.py
 │   │   └── clean_and_validate.py
-│   ├── gold/
-│   │   ├── __init__.py
-│   │   ├── calculate_statistics.py
-│   │   └── detect_anomalies.py
 │   └── utils/
 │       ├── __init__.py
 │       ├── data_quality.py
