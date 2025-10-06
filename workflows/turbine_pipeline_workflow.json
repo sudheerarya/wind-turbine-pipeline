@@ -1,102 +1,68 @@
 {
-  "name": "Wind Turbine Pipeline (Serverless)",
-  "job_clusters": [
-    {
-      "job_cluster_key": "serverless_small",
-      "new_cluster": {
-        "spark_version": "13.3.x-scala2.12",
-        "num_workers": 2,
-        "data_security_mode": "SINGLE_USER",
-        "runtime_engine": "STANDARD",
-        "serverless": true
-      }
+  "name": "turbine_pipeline_workflow",
+  "email_notifications": {
+    "no_alert_for_skipped_runs": false
+  },
+  "webhook_notifications": {},
+  "timeout_seconds": 0,
+  "trigger": {
+    "pause_status": "UNPAUSED",
+    "periodic": {
+      "interval": 1,
+      "unit": "DAYS"
     }
-  ],
-  "parameters": [
-    {
-      "name": "catalog",
-      "default": "main"
-    },
-    {
-      "name": "schema",
-      "default": "turbine"
-    },
-    {
-      "name": "raw_data_path",
-      "default": "data/sample"
-    },
-    {
-      "name": "bronze_table",
-      "default": "bronze_readings"
-    },
-    {
-      "name": "silver_table",
-      "default": "silver_readings"
-    },
-    {
-      "name": "gold_stats_table",
-      "default": "gold_turbine_stats"
-    },
-    {
-      "name": "gold_anomalies_table",
-      "default": "gold_turbine_anomalies"
-    },
-    {
-      "name": "anomaly_z_threshold",
-      "default": "2.0"
-    }
-  ],
+  },
+  "max_concurrent_runs": 1,
   "tasks": [
     {
-      "task_key": "bronze_ingest",
-      "job_cluster_key": "serverless_small",
+      "task_key": "Load_New_Data",
+      "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "notebooks/01_bronze_ingestion.py",
-        "base_parameters": {
-          "catalog": "{{catalog}}",
-          "schema": "{{schema}}",
-          "raw_data_path": "{{raw_data_path}}",
-          "bronze_table": "{{bronze_table}}"
-        }
-      }
+        "notebook_path": "/Workspace/Users/kumarshanmukha@gmail.com/wind-turbine-pipeline/notebooks/01_bronze_ingestion",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
     },
     {
-      "task_key": "silver_transform",
+      "task_key": "Transform_Silver",
       "depends_on": [
         {
-          "task_key": "bronze_ingest"
+          "task_key": "Load_New_Data"
         }
       ],
-      "job_cluster_key": "serverless_small",
+      "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "notebooks/02_silver_transformation.py",
-        "base_parameters": {
-          "catalog": "{{catalog}}",
-          "schema": "{{schema}}",
-          "bronze_table": "{{bronze_table}}",
-          "silver_table": "{{silver_table}}"
-        }
-      }
+        "notebook_path": "/Workspace/Users/kumarshanmukha@gmail.com/wind-turbine-pipeline/notebooks/02_silver_transformation",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
     },
     {
-      "task_key": "gold_aggregate",
+      "task_key": "Load_Gold_Stats_Anomolies",
       "depends_on": [
         {
-          "task_key": "silver_transform"
+          "task_key": "Transform_Silver"
         }
       ],
-      "job_cluster_key": "serverless_small",
+      "run_if": "ALL_SUCCESS",
       "notebook_task": {
-        "notebook_path": "notebooks/03_gold_aggregation.py",
-        "base_parameters": {
-          "catalog": "{{catalog}}",
-          "schema": "{{schema}}",
-          "silver_table": "{{silver_table}}",
-          "gold_stats_table": "{{gold_stats_table}}",
-          "gold_anomalies_table": "{{gold_anomalies_table}}",
-          "anomaly_z_threshold": "{{anomaly_z_threshold}}"
-        }
-      }
+        "notebook_path": "/Workspace/Users/kumarshanmukha@gmail.com/wind-turbine-pipeline/notebooks/03_gold_aggregation",
+        "source": "WORKSPACE"
+      },
+      "timeout_seconds": 0,
+      "email_notifications": {},
+      "webhook_notifications": {}
     }
-  ]
+  ],
+  "queue": {
+    "enabled": true
+  },
+  "performance_target": "PERFORMANCE_OPTIMIZED",
+  "run_as": {
+    "user_name": "kumarshanmukha@gmail.com"
+  }
 }
