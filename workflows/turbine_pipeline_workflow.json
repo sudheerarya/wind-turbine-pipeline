@@ -19,6 +19,9 @@
       "run_if": "ALL_SUCCESS",
       "notebook_task": {
         "notebook_path": "/Workspace/Users/kumarshanmukha@gmail.com/wind-turbine-pipeline/notebooks/01_bronze_ingestion",
+        "base_parameters": {
+          "raw_data_path": "/Volumes/main/turbine/data/"
+        },
         "source": "WORKSPACE"
       },
       "timeout_seconds": 0,
